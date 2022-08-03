@@ -9,14 +9,8 @@ const connnectToDb = async () => {
    await mongodbClient.connect();
    console.log("DB Connected");
    const database = mongodbClient.db(dbName);
-   // const result = await db.collection("inventory").find({'instock.1.qty':15}).toArray()
-   // const result = await db.collection("inventory").find().sort({ "instock.qty": -1 }).limit(4).toArray();
-   // console.log(`  *** result`, result);
-   // db.collection("users").insertOne({
-   //    username: "vuongcdt",
-   //    password: "123456",
-   // });
-   // client.close()
+   db.users = database.collection("users");
+   db.products = database.collection("products");
 };
 
 module.exports = { db, connnectToDb };
