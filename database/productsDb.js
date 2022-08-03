@@ -9,89 +9,67 @@ const findAllProductsBySlugDb = async ({ per_page = 10, page = 1, order = 1, ord
       const range = range_price.split(":");
       filter.price = { $gt: +range[0], $lt: +range[1] };
    }
-   console.time("time2");
 
-   console.time("time");
-   const total_products = await db.products.countDocuments(filter);
-   const list_products = await db.products
-      .find(filter)
-      .sort({ [orderby]: order })
-      .skip(+per_page * (+page - 1))
-      .limit(+per_page)
-      .toArray();
+   // const total_products = await db.products.countDocuments(filter);
+   // const list_products = await db.products
+   //    .find(filter)
+   //    .sort({ [orderby]: order })
+   //    .skip(+per_page * (+page - 1))
+   //    .limit(+per_page)
+   //    .toArray();
 
-   const temp = await db.products
+   const dataDb = await db.products
       .aggregate([
          {
-            $match: {
-               "categories.slug": "women",
-            },
+            $match: filter,
          },
          {
             $set: {
                brand: "$attributes.brand",
                color: "$attributes.color",
+               temp: 1,
             },
          },
          {
             $facet: {
-               list_products:[{$addFields:{document: "$$ROOT"}}],
+               total_products: [{ $sortByCount: "$temp" }],
+               list_products: [
+                  { $addFields: { document: "$$ROOT" } },
+                  { $sort: { [orderby]: order } },
+                  { $skip: +per_page * (+page - 1) },
+                  { $limit: +per_page },
+               ],
                brand: [{ $sortByCount: "$brand" }],
                color: [{ $unwind: "$color" }, { $sortByCount: "$color" }],
                categories: [{ $unwind: "$categories" }, { $sortByCount: "$categories" }],
-               price: [
-                  {
-                     $group: { _id: null, max: { $max: "$price" }, min: { $min: "$price" } },
-                  },
-               ],
+               price: [{ $group: { _id: null, max: { $max: "$price" }, min: { $min: "$price" } } }],
                rating: [{ $sortByCount: "$rating" }],
                discount: [{ $sortByCount: "$discount" }],
+               // discount: [
+               //    {
+               //       $match: { discount: { $gte: 10, $lt: 20 } },
+               //    },
+               //    {
+               //       $count: "discount",
+               //    },
+               // ],
             },
          },
       ])
       .toArray();
-   // console.log(`  *** temp`, temp);
-   console.timeEnd("time");
+   const discountSort = dataDb[0].discount.sort((a, b) => a._id - b._id);
+   const discountEdit = [0, 10, 20, 30, 40, 50]
+      .map((value, index) => {
+         const listDiscount = discountSort.filter(({ _id, count }) => _id >= value).map(({ count }) => count);
+         const totalCount = eval(listDiscount.join("+"));
+         return { name: `${value}% and above`, slug: value, count: totalCount };
+      })
+      .filter(({ count }) => count);
 
+   dataDb[0].discount = discountEdit;
 
-   const list_all_products = await db.products.find(filter).toArray();
-   const listPriceProduct = list_all_products.map((product) => product.price).sort((a, b) => a - b);
-   const price_count = { min: listPriceProduct[0], max: listPriceProduct.pop() };
-   // console.log(`  *** price_count`, price_count)
-
-   const listBrandProduct = list_all_products.map((product) => product.attributes.brand.slug);
-   const brand_count = [...new Set(listBrandProduct)].map((brand) => {
-      return { slug: brand, count: listBrandProduct.filter((item) => item === brand).length };
-   });
-   // console.log(`  *** brand_count`, brand_count);
-
-   const listColorProduct = list_all_products.map((product) => product.attributes.color.map((item) => item.slug)).flat(1);
-   const color_count = [...new Set(listColorProduct)].map((color) => {
-      return { slug: color, count: listColorProduct.filter((item) => item === color).length };
-   });
-   // console.log(`  *** color_count`, color_count)
-
-   const listRatingProduct = list_all_products.map((product) => product.rating);
-   const rating_count = [...new Set(listRatingProduct)].map((rating) => {
-      return { slug: rating, count: listRatingProduct.filter((item) => item === rating).length };
-   });
-   // console.log(`  *** rating_count`, rating_count)
-
-   const listDiscountProduct = list_all_products.map((product) => product.discount);
-   const discount_count = [...new Set(listDiscountProduct)].map((discount) => {
-      return { slug: discount, count: listDiscountProduct.filter((item) => item === discount).length };
-   });
-   // console.log(`  *** discount_count`, discount_count)
-
-   const listCategoriesProduct = list_all_products.map((product) => product.categories.map((item) => item.slug)).flat(1);
-   const categories_count = [...new Set(listCategoriesProduct)].map((categorie) => {
-      return { slug: categorie, count: listCategoriesProduct.filter((item) => item === categorie).length };
-   });
-   // console.log(`  *** categories_count`, categories_count)
-
-   // console.timeEnd("time2");
-
-   return { per_page, page, list_products, total_products };
+   const { list_products, total_products, brand, color, categories, price, rating, discount } = dataDb[0];
+   return { per_page, page, list_products, total_products: total_products[0].count, filter: { brand, color, categories, price, rating, discount } };
 };
 
 const findProductBySlugDb = async (slug) => {
