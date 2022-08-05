@@ -1,6 +1,8 @@
 const { MongoClient } = require("mongodb");
 
-const url = "mongodb://localhost:27017";
+// const url = "mongodb://localhost:27017";
+const url="mongodb+srv://admin:admin123@cluster0.yy8pv.mongodb.net/test"
+
 const dbName = "webShop";
 // const dbName = "mindx_web_55";
 const db = {};

@@ -10,7 +10,9 @@ const editData = () => {
          question_and_answers,
          description,
          short_description,
-         attributes,
+         color,
+         brand,
+         size,
          categories,
          date_created,
          dimensions,
@@ -32,10 +34,8 @@ const editData = () => {
          stock_quantity,
          tags,
          _links,
+        
       }) => {
-         if (!attributes.color || !attributes.brand) {
-            console.log(id);
-         }
          return {
             back_image,
             front_image,
@@ -68,6 +68,7 @@ const editData = () => {
             stock_quantity,
             tags,
             _links,
+            key_search:`${name} ${brand.slug} ${categories.map(({slug})=>slug).join(' ')}`,
          };
       }
    );

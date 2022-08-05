@@ -2,9 +2,9 @@ const express = require("express");
 const { productCtrl } = require("../controllers/productCtrl");
 const router = express.Router();
 
-router.get("/", async(req, res) => {
+router.get("/:slug", async(req, res) => {
    try {
-      const { total_page, total_products, per_page, page, product } =await productCtrl(req.query);
+      const { total_page, total_products, per_page, page, product } =await productCtrl(req.params.slug);
       res.set({ total_page, total_products, per_page, page });
       res.json(product);
    } catch (error) {
