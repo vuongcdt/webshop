@@ -4,7 +4,7 @@ const { connectToDb } = require("./database");
 const { editData } = require("./editData");
 const router = require("./routers");
 
-console.log('process.env.PORT:',process.env.PORT,process.env.URI_MONGODB)
+console.log('process.env.PORT:',process.env.PORT,process.env.MONGODB_URI)
 const port = process.env.PORT ;
 
 const app = express();
@@ -28,7 +28,7 @@ app.get("/", async (req, res) => {
 //    } 
 // });
 
-connectToDb(process.env.URI_MONGODB);
+connectToDb(process.env.MONGODB_URI);
 
 app.listen(port, () => {
    console.log(`Sever is runing at port ${port}`);
