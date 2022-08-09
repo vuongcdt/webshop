@@ -4,6 +4,7 @@ const { connectToDb } = require("./database");
 const { editData } = require("./editData");
 const router = require("./routers");
 
+console.log('process.env.PORT:',process.env.PORT)
 const port = process.env.PORT ;
 const app = express();
 
