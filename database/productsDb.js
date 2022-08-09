@@ -5,6 +5,7 @@ const findOneProductBySlugDb = async (slug) => {
 };
 
 const findAllProductsByQueryDb = async ({ per_page, page, order, orderby, slug, pa_color, pa_brand, range_price, pa_discount, pa_rating, key }) => {
+console.log(`  *** key`, key)
    const filter = {};
 
    if (slug) filter["categories.slug"] = slug;
@@ -19,7 +20,7 @@ const findAllProductsByQueryDb = async ({ per_page, page, order, orderby, slug, 
 
    const dataDb = await db.products
       .aggregate([
-         ...configSearchAndFilterToAggregate(filter, key),
+         ...configSearchAndFilterToAggregate(filter, key), 
           ...configSortToAggregate(per_page, page, order, orderby)
       ])
       .toArray();

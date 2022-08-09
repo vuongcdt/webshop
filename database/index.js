@@ -1,6 +1,6 @@
 const { MongoClient } = require("mongodb");
 
-const dbName = "webShop";
+const dbName = "webshop";
 const db = {};
 const connectToDb = async (url) => {
    const mongodbClient = new MongoClient(url);
