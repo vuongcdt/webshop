@@ -20,12 +20,8 @@ const findAllProductsByQueryDb = async ({ per_page, page, order, orderby, slug, 
    const dataDb = await db.products
       .aggregate([
          ...configSearchAndFilterToAggregate(filter, key),
-         // ...configSearchAndFilterPreventiveToAggregate(filter, key),
           ...configSortToAggregate(per_page, page, order, orderby)
       ])
-      .toArray();
-   const dataPreventiveDb = await db.products
-      .aggregate([...configSearchAndFilterPreventiveToAggregate(filter, key), ...configSortToAggregate(per_page, page, order, orderby)])
       .toArray();
 
    const dataFilter = await filterSidebar(filter);
@@ -66,37 +62,6 @@ const configSearchAndFilterToAggregate = (filter, key) => {
    }
 };
 
-const configSearchAndFilterPreventiveToAggregate = (filter, key) => {
-   if (key) {
-      return [
-         {
-            $search: {
-               compound: {
-                  should: key.split("_").map((word) => ({
-                     autocomplete: {
-                        query: word,
-                        path: "key_search",
-                        fuzzy: {
-                           maxEdits: 1,
-                        },
-                     },
-                  })),
-               },
-            },
-         },
-         {
-            $match: filter,
-         },
-      ];
-   } else {
-      return [
-         {
-            $match: filter,
-         },
-      ];
-   }
-};
-
 const configSortToAggregate = (per_page, page, order, orderby) => {
    return [
       {
@@ -113,25 +78,25 @@ const configSortToAggregate = (per_page, page, order, orderby) => {
                { $limit: +per_page },
                {
                   $project: {
-                     // _id: 1,
-                     // back_image: 1,
-                     // front_image: 1,
-                     // short_description: 1,
-                     // color: 1,
-                     // brand: 1,
-                     // size: 1,
-                     // categories: 1,
-                     // date_create: 1,
-                     // name: 1,
-                     // slug: 1,
-                     // on_sale: 1,
-                     // discount: 1,
-                     // price: 1,
-                     // rating: 1,
-                     // regular_price: 1,
-                     // rating_count: 1,
-                     _id: 0,
-                     key_search: 1,
+                     _id: 1,
+                     back_image: 1,
+                     front_image: 1,
+                     short_description: 1,
+                     color: 1,
+                     brand: 1,
+                     size: 1,
+                     categories: 1,
+                     date_create: 1,
+                     name: 1,
+                     slug: 1,
+                     on_sale: 1,
+                     discount: 1,
+                     price: 1,
+                     rating: 1,
+                     regular_price: 1,
+                     rating_count: 1,
+                     // _id: 0,
+                     // key_search: 1,
                   },
                },
             ],

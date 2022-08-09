@@ -1,5 +1,4 @@
 const express = require("express");
-const jwt = require("jsonwebtoken");
 const { loginCtrl, registerCtrl } = require("../controllers/authCtrl");
 const { validateMdw } = require("../middlewares/authMdw");
 
@@ -10,7 +9,7 @@ router.post("/login",async (req, res) => {
       const token =await loginCtrl(req.body.email,req.body.password);
       res.json({token});
    } catch (error) {
-      console.log(`*** error login ***`, error);
+      console.log(`*** error /login ***`, error);
       res.status(401).send(error.message);
    }
 });
@@ -24,7 +23,7 @@ router.post("/register", validateMdw, async (req, res) => {
       const result = await registerCtrl(req.body.email, req.body.password);
       res.json({ infoUser: { _id: result.insertedId, email: req.body.email } });
    } catch (error) {
-      console.log(`*** error register ***`, error);
+      console.log(`*** error /register ***`, error);
       res.status(401).send(error.message);
    }
 });

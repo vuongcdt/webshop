@@ -68,7 +68,7 @@ const editData = () => {
             stock_quantity,
             tags,
             _links,
-            key_search:`${name} ${brand.slug} ${categories.map(({slug})=>slug).join(' ')}`,
+            key_search:`${name}, ${brand.slug}, ${categories.map(({slug})=>slug).join(', ')}`,
          };
       }
    );

@@ -8,7 +8,8 @@ const app = express();
 
 app.use(express.json());
 
-app.use(router);
+app.use('/api',router);
+
 app.get("/", async (req, res) => {
    res.send("sever is runing");
 });
@@ -18,8 +19,7 @@ app.get("/", async (req, res) => {
 app.use((err, req, res, next) => {
    if (err) {
       console.log("ERROR", err);
-      // fs.writeFile(path.resolve(__dirname, "err.txt"), JSON.stringify(err.number), (err) => console.log("err FS", err));
-      res.send("loi roi  " + err);
+      res.send("error  " + err);
    } else {
       next();
    }
