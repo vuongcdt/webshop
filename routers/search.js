@@ -7,7 +7,7 @@ router.get("/", async (req, res) => {
     console.time('search')
     const { list_products, _total } = await searchCtrl(req.query.key);
     console.timeEnd('search')
-      res.json({  _total,list_products:list_products.sort()});
+      res.json({  _total,list_products});
    } catch (error) {
       console.log(`  *** error /search`, error);
    }

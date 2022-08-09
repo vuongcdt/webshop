@@ -1,8 +1,8 @@
 const { findAllProductsByQueryDb } = require("../database/productsDb");
 
 const productsFilterCtrl = async (query) => {
-   if (!query.slug && !query.key && query.isCategory)
-      return { per_page: 1, page: 1, list_products: ["all categories"], total_products: 1, total_page: 1 };
+   // if (!query.slug && !query.key && query.isCategory)
+   //    return { per_page: 1, page: 1, list_products: ["all categories"], total_products: 1, total_page: 1 };
 
    if (query.order === "desc") {
       query.order = -1;
@@ -21,7 +21,7 @@ const productsFilterCtrl = async (query) => {
    console.timeEnd("DB");
    const total_page = Math.ceil(total_products / per_page);
 
-   if (page > total_page && total_page > 0) throw new Error("Total Page less than page");
+   // if (page > total_page && total_page > 0) throw new Error("Total Page less than page");
 
    return { per_page, page, list_products, total_products, total_page, filterSidebar };
 };

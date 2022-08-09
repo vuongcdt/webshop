@@ -20,51 +20,12 @@ const findAllProductsByQueryDb = async ({ per_page, page, order, orderby, slug, 
    const dataDb = await db.products
       .aggregate([
          ...configSearchAndFilterToAggregate(filter, key),
-         {
-            $set: {
-               temp: 1,
-            },
-         },
-         {
-            $facet: {
-               total_products: [{ $sortByCount: "$temp" }],
-               list_products: [
-                  { $sort: { [orderby]: order } },
-                  { $skip: +per_page * (+page - 1) },
-                  { $limit: +per_page },
-                  // {
-                  //    $project: {
-                  //       _id: 1,
-                  //       back_image: 1,
-                  //       front_image: 1,
-                  //       short_description: 1,
-                  //       color: 1,
-                  //       brand: 1,
-                  //       size: 1,
-                  //       categories: 1,
-                  //       date_create: 1,
-                  //       name: 1,
-                  //       slug: 1,
-                  //       on_sale: 1,
-                  //       discount: 1,
-                  //       price: 1,
-                  //       rating: 1,
-                  //       regular_price: 1,
-                  //       rating_count: 1,
-                  //    },
-                  // },
-                  {
-                     $project: {
-                        _id: 0,
-                        // name: 1,
-                        // brand:1,
-                        key_search: 1,
-                     },
-                  },
-               ],
-            },
-         },
+         // ...configSearchAndFilterPreventiveToAggregate(filter, key),
+          ...configSortToAggregate(per_page, page, order, orderby)
       ])
+      .toArray();
+   const dataPreventiveDb = await db.products
+      .aggregate([...configSearchAndFilterPreventiveToAggregate(filter, key), ...configSortToAggregate(per_page, page, order, orderby)])
       .toArray();
 
    const dataFilter = await filterSidebar(filter);
@@ -83,67 +44,15 @@ const findAllProductsByQueryDb = async ({ per_page, page, order, orderby, slug, 
 };
 
 const configSearchAndFilterToAggregate = (filter, key) => {
-   // key=key.replace('_',' ')
-
-   console.log(`  *** key`, key);
    if (key) {
       return [
-         ...key.split('_').map(chart=>({$match:{
-            key_search:{
-               $regex:chart
-            }
-         }})),
-
-         // {
-         //    $search: {
-         //       index: "default",
-         //       text: {
-         //          query: key.replace("_", " "),
-         //          path: {
-         //             wildcard: "*",
-         //          },
-         //       },
-         //    },
-         // },
-
-         // {
-         //    $search: {
-         //       compound: {
-         //          // should: [
-         //          //    {
-         //          //       autocomplete: {
-         //          //          query: key.replace("_", " "),
-         //          //          path: "key_search",
-         //          //       },
-         //          //    },
-         //          // ],
-
-         //          // must: [{
-         //          //    autocomplete: {
-         //          //       query: key.replace('_',' '),
-         //          //       path: "brand.slug"
-         //          //    }
-         //          // }],
-
-         //          // should: [{
-         //          //    autocomplete: {
-         //          //       query: key.replace('_',' '),
-         //          //       path: 'name'
-         //          //    }
-         //          // }],
-
-         //          must: key.split("_").map((word) => ({
-         //             autocomplete: {
-         //                query: word,
-         //                path: "key_search",
-         //                // fuzzy:{
-         //                //    maxEdits:1
-         //                // }
-         //             },
-         //          })),
-         //       },
-         //    },
-         // },
+         ...key.split("_").map((char) => ({
+            $match: {
+               key_search: {
+                  $regex: char,
+               },
+            },
+         })),
          {
             $match: filter,
          },
@@ -155,6 +64,80 @@ const configSearchAndFilterToAggregate = (filter, key) => {
          },
       ];
    }
+};
+
+const configSearchAndFilterPreventiveToAggregate = (filter, key) => {
+   if (key) {
+      return [
+         {
+            $search: {
+               compound: {
+                  should: key.split("_").map((word) => ({
+                     autocomplete: {
+                        query: word,
+                        path: "key_search",
+                        fuzzy: {
+                           maxEdits: 1,
+                        },
+                     },
+                  })),
+               },
+            },
+         },
+         {
+            $match: filter,
+         },
+      ];
+   } else {
+      return [
+         {
+            $match: filter,
+         },
+      ];
+   }
+};
+
+const configSortToAggregate = (per_page, page, order, orderby) => {
+   return [
+      {
+         $set: {
+            temp: 1,
+         },
+      },
+      {
+         $facet: {
+            total_products: [{ $sortByCount: "$temp" }],
+            list_products: [
+               { $sort: { [orderby]: order } },
+               { $skip: +per_page * (+page - 1) },
+               { $limit: +per_page },
+               {
+                  $project: {
+                     // _id: 1,
+                     // back_image: 1,
+                     // front_image: 1,
+                     // short_description: 1,
+                     // color: 1,
+                     // brand: 1,
+                     // size: 1,
+                     // categories: 1,
+                     // date_create: 1,
+                     // name: 1,
+                     // slug: 1,
+                     // on_sale: 1,
+                     // discount: 1,
+                     // price: 1,
+                     // rating: 1,
+                     // regular_price: 1,
+                     // rating_count: 1,
+                     _id: 0,
+                     key_search: 1,
+                  },
+               },
+            ],
+         },
+      },
+   ];
 };
 
 const filterSidebar = async (filter) => {

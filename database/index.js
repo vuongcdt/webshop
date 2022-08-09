@@ -6,7 +6,7 @@ const url="mongodb+srv://admin:admin123@cluster0.yy8pv.mongodb.net/test"
 const dbName = "webShop";
 // const dbName = "mindx_web_55";
 const db = {};
-const connnectToDb = async () => {
+const connectToDb = async () => {
    const mongodbClient = new MongoClient(url);
    await mongodbClient.connect();
    console.log("DB Connected");
@@ -15,4 +15,4 @@ const connnectToDb = async () => {
    db.products = database.collection("products");
 };
 
-module.exports = { db, connnectToDb };
+module.exports = { db, connectToDb };

@@ -1,5 +1,5 @@
 const express = require("express");
-const { connnectToDb } = require("./database");
+const { connectToDb } = require("./database");
 const { editData } = require("./editData");
 const router = require("./routers");
 
@@ -9,7 +9,7 @@ const app = express();
 app.use(express.json());
 
 app.use(router);
-app.get("/", (req, res) => {
+app.get("/", async (req, res) => {
    res.send("sever is runing");
 });
 
@@ -25,7 +25,7 @@ app.use((err, req, res, next) => {
    }
 });
 
-connnectToDb();
+connectToDb();
 
 app.listen(port, () => {
    console.log(`Sever is runing at port ${port}`);

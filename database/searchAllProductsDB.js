@@ -2,8 +2,11 @@ const { db } = require(".");
 
 const searchAllProductsDb = async (key) => {
    console.log(`  *** key`, key);
+   const result = await db.products.createIndex({ key_search: "text"});
+   console.log(`  *** result`, result);
    const filter = {
-      key_search: { $regex: key.replace("_", " ") },
+      $text: { $search: key.replace("_", " ") },
+      // key_search: { $regex: key.replace("_", " ") },
       // key_search: { $all: [{ $regex: key.replace("_", " ") }, { $regex: "men" }] },
       // {$and:[{price:{$lt:30}},{price:{$gt:20}}]}
       // "band.slug": { $regex: key }
