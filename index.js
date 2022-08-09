@@ -18,7 +18,7 @@ app.use(morgan('dev'));
 app.use("/api", router);
 
 app.get("/", async (req, res) => {
-   res.send("sever is runing");
+   res.send("sever is runing "+ process.env.MONGODB_URI);
 });
 
 // console.log(`  *** editData()`, editData())

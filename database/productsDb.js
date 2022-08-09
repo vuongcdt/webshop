@@ -5,7 +5,6 @@ const findOneProductBySlugDb = async (slug) => {
 };
 
 const findAllProductsByQueryDb = async ({ per_page, page, order, orderby, slug, pa_color, pa_brand, range_price, pa_discount, pa_rating, key }) => {
-console.log(`  *** key`, key)
    const filter = {};
 
    if (slug) filter["categories.slug"] = slug;
