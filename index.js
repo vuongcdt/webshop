@@ -4,14 +4,14 @@ const { connectToDb } = require("./database");
 const { editData } = require("./editData");
 const router = require("./routers");
 
-console.log('process.env.PORT:',process.env.PORT,process.env.URL_MONGODB)
-const port = process.env.PORT ;
-const url = process.env.URL_MONGODB;
+console.log("process.env.PORT:", process.env.PORT, process.env.URI_MONGODB);
+const port = process.env.PORT;
+const URI = "mongodb+srv://admin:admin123@cluster0.yy8pv.mongodb.net/test";
 const app = express();
 
 app.use(express.json());
 
-app.use('/api',router);
+app.use("/api", router);
 
 app.get("/", async (req, res) => {
    res.send("sever is runing");
@@ -19,16 +19,17 @@ app.get("/", async (req, res) => {
 
 // console.log(`  *** editData()`, editData())
 
-app.use((err, req, res, next) => {
-   if (err) {
-      console.log("ERROR", err);
-      res.send("error  " + err);
-   } else {
-      next();
-   } 
-});
+// app.use((err, req, res, next) => {
+//    if (err) {
+//       console.log("ERROR", err);
+//       res.send("error  " + err);
+//    } else {
+//       next();
+//    }
+// });
 
-connectToDb(url);
+connectToDb(URI);
+// connectToDb(process.env.URI_MONGODB);
 
 app.listen(port, () => {
    console.log(`Sever is runing at port ${port}`);
