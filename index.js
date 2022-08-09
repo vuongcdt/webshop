@@ -1,9 +1,10 @@
+require("dotenv").config();
 const express = require("express");
 const { connectToDb } = require("./database");
 const { editData } = require("./editData");
 const router = require("./routers");
 
-const port = process.env.PORT || 5001;
+const port = process.env.PORT ;
 const app = express();
 
 app.use(express.json());
@@ -22,7 +23,7 @@ app.use((err, req, res, next) => {
       res.send("error  " + err);
    } else {
       next();
-   }
+   } 
 });
 
 connectToDb();
