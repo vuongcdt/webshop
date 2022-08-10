@@ -27,8 +27,8 @@ const findAllProductsByQueryDb = async ({ per_page, page, order, orderby, slug, 
    const brand = dataFilter[0].brand.map(({ _id, count }) => ({count,slug:_id.slug,name:_id.name}));
    const color = dataFilter[0].color.map(({ _id, count }) => ({count,slug:_id.slug,name:_id.name}));
    const categories = dataFilter[0].categories.map(({ _id, count }) => ({count,slug:_id.slug,name:_id.name}));
+   const price = {min:dataFilter[0].price[0].min,max:dataFilter[0].price[0].max}
    const { list_products, total_products } = dataDb[0];
-   const {  price } = dataFilter[0];
 
    return {
       per_page,
