@@ -12,8 +12,8 @@ const findAllProductsByQueryDb = async ({ per_page, page, order, orderby, slug, 
    if (pa_brand) filter["brand.slug"] = { $in: pa_brand.split(",") };
    if (pa_discount) filter.discount = { $gte: +pa_discount };
    if (pa_rating) filter.rating = { $gte: +pa_rating, $lt: +pa_rating + 1 };
-   const [min, max] = range_price.split(":");
    if (range_price) {
+      const [min, max] = range_price.split(":");
       filter.price = { $gt: +min, $lt: +max };
    }
 
@@ -22,15 +22,16 @@ const findAllProductsByQueryDb = async ({ per_page, page, order, orderby, slug, 
       .toArray();
 
    const dataFilter = await filterSidebar(filter);
-   const discount = listDiscountEdit(dataFilter[0].discount,pa_discount);
-   const rating = listRatingEdit(dataFilter[0].rating,pa_rating);
+   const discount = listDiscountEdit(dataFilter[0].discount, pa_discount);
+   const rating = listRatingEdit(dataFilter[0].rating, pa_rating);
    const brand = dataFilter[0].brand.map(({ _id, count }) => ({ count, slug: _id.slug, name: _id.name, checked: _id.slug === pa_brand }));
    const color = dataFilter[0].color.map(({ _id, count }) => ({ count, slug: _id.slug, name: _id.name, checked: _id.slug === pa_color }));
    const categories = dataFilter[0].categories.map(({ _id, count }) => ({ count, slug: _id.slug, name: _id.name, checked: _id.slug === slug }));
-   const price = { min: dataFilter[0].price[0].min, max: dataFilter[0].price[0].max};
+   const price = { min: dataFilter[0].price[0].min, max: dataFilter[0].price[0].max };
    if (range_price) {
-      price.minHandle=min
-      price.maxHandle=max
+      const [min, max] = range_price.split(":");
+      price.minHandle = min;
+      price.maxHandle = max;
    }
    const { list_products, total_products } = dataDb[0];
 
@@ -172,21 +173,21 @@ const filterSidebar = async (filter) => {
       .toArray();
 };
 
-const listDiscountEdit = (dataFilter,pa_discount) =>
+const listDiscountEdit = (dataFilter, pa_discount) =>
    [0, 10, 20, 30, 40, 50]
       .map((value, index) => {
          const listDiscountFilter = dataFilter.filter(({ _id }) => (_id >= value) & (_id - 10 < value)).map(({ count }) => count);
          const totalCount = eval(listDiscountFilter.join("+"));
-         return { name: `${value}% and above`, slug: value, count: totalCount ,checked:+pa_discount===value};
+         return { name: `${value}% and above`, slug: value, count: totalCount, checked: +pa_discount === value };
       })
       .filter(({ count }) => count);
 
-const listRatingEdit = (dataFilter,pa_rating) =>
+const listRatingEdit = (dataFilter, pa_rating) =>
    [0, 1, 2, 3, 4, 5]
       .map((value, index) => {
          const listRatingFilter = dataFilter.filter(({ _id }) => _id >= value && _id < value + 1).map(({ count }) => count);
          const totalCount = eval(listRatingFilter.join("+"));
-         return { slug: value, count: totalCount ,checked:+pa_rating===value};
+         return { slug: value, count: totalCount, checked: +pa_rating === value };
       })
       .filter(({ count }) => count)
       .sort((a, b) => b.slug - a.slug);
