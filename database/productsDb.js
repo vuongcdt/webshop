@@ -7,7 +7,7 @@ const findOneProductBySlugDb = async (slug) => {
 const findAllProductsByQueryDb = async ({ per_page, page, order, orderby, slug, pa_color, pa_brand, range_price, pa_discount, pa_rating, key }) => {
    const filter = {};
 
-   if (slug) filter["categories.slug"] = slug;
+   if (slug) filter["categories.slug"] = { $in: slug.split(",") };
    if (pa_color) filter["color.slug"] = { $in: pa_color.split(",") };
    if (pa_brand) filter["brand.slug"] = { $in: pa_brand.split(",") };
    if (pa_discount) filter.discount = { $gte: +pa_discount };

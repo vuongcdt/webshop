@@ -23,14 +23,14 @@ app.get("/", async (req, res) => {
 
 // console.log(`  *** editData()`, editData())
 
-// app.use((err, req, res, next) => {
-//    if (err) {
-//       console.log("ERROR", err);
-//       res.send("error  " + err);
-//    } else {
-//       next(); 
-//    }
-// });
+app.use((err, req, res, next) => {
+   if (err) {
+      console.log("ERROR", err);
+      res.send("error  " + err);
+   } else {
+      next(); 
+   }
+});
 
 connectToDb(process.env.MONGODB_URI);
 
