@@ -18,17 +18,17 @@ const findAllProductsByQueryDb = async ({ per_page, page, order, orderby, slug, 
    }
 
    const dataDb = await db.products
-      .aggregate([
-         ...configSearchAndFilterToAggregate(filter, key), 
-          ...configSortToAggregate(per_page, page, order, orderby)
-      ])
+      .aggregate([...configSearchAndFilterToAggregate(filter, key), ...configSortToAggregate(per_page, page, order, orderby)])
       .toArray();
 
    const dataFilter = await filterSidebar(filter);
    const discount = listDiscountEdit(dataFilter[0].discount);
    const rating = listRatingEdit(dataFilter[0].rating);
+   const brand = dataFilter[0].brand.map(({ _id, count }) => ({count,slug:_id.slug,name:_id.name}));
+   const color = dataFilter[0].color.map(({ _id, count }) => ({count,slug:_id.slug,name:_id.name}));
+   const categories = dataFilter[0].categories.map(({ _id, count }) => ({count,slug:_id.slug,name:_id.name}));
    const { list_products, total_products } = dataDb[0];
-   const { brand, color, categories, price } = dataFilter[0];
+   const {  price } = dataFilter[0];
 
    return {
       per_page,
