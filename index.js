@@ -1,4 +1,4 @@
-// require("dotenv").config();
+require("dotenv").config();
 const express = require("express");
 const morgan = require("morgan");
 const cors=require('cors')
@@ -14,11 +14,11 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 app.use(morgan('dev'));
-
+  
 app.use("/api", router);
 
 app.get("/", async (req, res) => {
-   res.send("sever is runing "+ process.env.MONGODB_URI);
+   res.send("sever is runing "+ /\@.+/.exec(process.env.MONGODB_URI) );
 });
 
 // console.log(`  *** editData()`, editData())
