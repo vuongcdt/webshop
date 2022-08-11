@@ -6,7 +6,7 @@ const wakeUp = async () => {
       const result = await axios.get("https://webshop-sigma.vercel.app/");
       console.log(`  *** result`, result.data);
    } catch (error) {
-      console.log(`  *** error get/`, error);
+      console.log(`  *** error get/ `, error);
    }
    timeId = setInterval(async () => {
       try {
