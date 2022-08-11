@@ -20,7 +20,7 @@ app.use("/api", router);
 
 app.get("/", async (req, res) => {
    await wakeUp();
-   res.send("sever is runing ");
+   res.send("sever is runing !");
 });
 
 // console.log(`  *** editData()`, editData())
