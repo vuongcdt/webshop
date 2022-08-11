@@ -1,7 +1,7 @@
-// require("dotenv").config();
+require("dotenv").config();
 const express = require("express");
 const morgan = require("morgan");
-const cors=require('cors')
+const cors = require("cors");
 const { connectToDb } = require("./database");
 const { editData } = require("./editData");
 const router = require("./routers");
@@ -14,11 +14,12 @@ const app = express();
 
 app.use(express.json());
 app.use(cors());
-app.use(morgan('dev'));
-  
+app.use(morgan("dev"));
+
 app.use("/api", router);
 
 app.get("/", async (req, res) => {
+   await wakeUp();
    res.send("sever is runing ");
 });
 
@@ -29,12 +30,12 @@ app.use((err, req, res, next) => {
       console.log("ERROR", err);
       res.send("error  " + err);
    } else {
-      next(); 
+      next();
    }
 });
 
 connectToDb(process.env.MONGODB_URI);
-wakeUp()  
+wakeUp();
 
 app.listen(port, () => {
    console.log(`Sever is runing at port ${port}`);

@@ -3,7 +3,8 @@ let timeId;
 const wakeUp = async () => {
    clearInterval(timeId);
    try {
-      await axios.get("https://webshop-sigma.vercel.app/");
+      const result = await axios.get("https://webshop-sigma.vercel.app/");
+      console.log(`  *** result`, result.data);
    } catch (error) {
       console.log(`  *** error get/`, error);
    }
