@@ -2,9 +2,10 @@ const { default: axios } = require("axios");
 let timeId;
 const wakeUp = () => {
    clearInterval(timeId);
-   setTimeout(async () => {
+   const timeFirst= setTimeout(async () => {
       try {
          await fetchSever();
+         clearTimeout(timeFirst)
       } catch (error) {
          console.log(`  *** error get/`, error);
       }
