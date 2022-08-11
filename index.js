@@ -5,7 +5,6 @@ const cors=require('cors')
 const { connectToDb } = require("./database");
 const { editData } = require("./editData");
 const router = require("./routers");
-const { default: axios } = require("axios");
 const { wakeUp } = require("./wake-up/wakeUp");
 
 console.log("process.env.PORT:", process.env.PORT, process.env.MONGODB_URI);
@@ -20,10 +19,11 @@ app.use(morgan('dev'));
 app.use("/api", router);
 
 app.get("/", async (req, res) => {
+   wakeUp() 
    res.send("sever is runing ");
 });
 
-wakeUp()
+wakeUp() 
 
 // console.log(`  *** editData()`, editData())
 

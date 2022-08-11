@@ -1,18 +1,15 @@
 {
-   "version": 2,
-   "name": "webshop",
    "builds": [{ "src": "index.js", "use": "@vercel/node" }],
    "routes": [{ "src": "/(.*)", "dest": "/" }],
    "regions": ["sin1"],
    "functions": {
       "index.js": {
          "memory": 3008,
-         "maxDuration": 20
+         "maxDuration": 10
       },
       "/(.*)": {
          "memory": 3008,
-         "maxDuration": 20
+         "maxDuration": 10
       }
-   },
-   "public": true
+   }
 }
