@@ -28,7 +28,7 @@ app.get("/", async (req, res) => {
 app.use((err, req, res, next) => {
    if (err) {
       console.log("ERROR", err);
-      res.send("error  " + err);
+      res.send("error " + err);
    } else {
       next();
    }
