@@ -24,9 +24,15 @@ const findAllProductsByQueryDb = async ({ per_page, page, order, orderby, slug, 
    const dataFilter = await filterSidebar(filter);
    const discount = listDiscountEdit(dataFilter[0].discount, pa_discount);
    const rating = listRatingEdit(dataFilter[0].rating, pa_rating);
-   const brand = dataFilter[0].brand.map(({ _id, count }) => ({ count, slug: _id.slug, name: _id.name, checked: _id.slug === pa_brand }));
-   const color = dataFilter[0].color.map(({ _id, count }) => ({ count, slug: _id.slug, name: _id.name, checked: _id.slug === pa_color }));
-   const categories = dataFilter[0].categories.map(({ _id, count }) => ({ count, slug: _id.slug, name: _id.name, checked: _id.slug === slug }));
+   const brand = dataFilter[0].brand
+      .map(({ _id, count }) => ({ count, slug: _id.slug, name: _id.name, checked: _id.slug === pa_brand }))
+      .sort((a, b) => a.slug.localeCompare(b.slug));
+   const color = dataFilter[0].color
+      .map(({ _id, count }) => ({ count, slug: _id.slug, name: _id.name, checked: _id.slug === pa_color }))
+      .sort((a, b) => a.slug.localeCompare(b.slug));
+   const categories = dataFilter[0].categories
+      .map(({ _id, count }) => ({ count, slug: _id.slug, name: _id.name, checked: _id.slug === slug }))
+      .sort((a, b) => a.slug.localeCompare(b.slug));
    const price = { min: dataFilter[0].price[0].min, max: dataFilter[0].price[0].max };
    if (range_price) {
       const [min, max] = range_price.split(":");

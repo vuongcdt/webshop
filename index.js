@@ -5,6 +5,8 @@ const cors=require('cors')
 const { connectToDb } = require("./database");
 const { editData } = require("./editData");
 const router = require("./routers");
+const { default: axios } = require("axios");
+const { wakeUp } = require("./wake-up/wakeUp");
 
 console.log("process.env.PORT:", process.env.PORT, process.env.MONGODB_URI);
 const port = process.env.PORT || 5001;
@@ -18,8 +20,10 @@ app.use(morgan('dev'));
 app.use("/api", router);
 
 app.get("/", async (req, res) => {
-   res.send("sever is runing "+ /\@.+/.exec(process.env.MONGODB_URI) );
+   res.send("sever is runing ");
 });
+
+wakeUp()
 
 // console.log(`  *** editData()`, editData())
 
