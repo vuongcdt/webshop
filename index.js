@@ -1,4 +1,4 @@
-// require("dotenv").config();
+require("dotenv").config();
 const express = require("express");
 const morgan = require("morgan");
 const cors=require('cors')
@@ -19,10 +19,8 @@ app.use(morgan('dev'));
 app.use("/api", router);
 
 app.get("/", async (req, res) => {
-   wakeUp() 
    res.send("sever is runing ");
 });
-
 
 // console.log(`  *** editData()`, editData())
 

@@ -1,27 +1,21 @@
 const { default: axios } = require("axios");
 let timeId;
-const wakeUp = () => {
+const wakeUp = async () => {
    clearInterval(timeId);
-   const timeFirst= setTimeout(async () => {
-      try {
-         await fetchSever();
-         clearTimeout(timeFirst)
-      } catch (error) {
-         console.log(`  *** error get/`, error);
-      }
-   }, 30 * 1000);
+   try {
+      await axios.get("https://webshop-sigma.vercel.app/");
+   } catch (error) {
+      console.log(`  *** error get/`, error);
+   }
    timeId = setInterval(async () => {
       try {
-         await fetchSever();
+         const time = new Date().toLocaleString();
+         const result = await axios.get("https://webshop-sigma.vercel.app/api/product/terry-polo-shirt");
+         console.log(`  *** result:`, result.data.name, ", time: ", time);
       } catch (error) {
-         console.log(`  *** error get/`, error);
+         console.log(`  *** error get/ setInterval`, error);
       }
    }, 5 * 60 * 1000);
 };
 
-const fetchSever = async () => {
-   const time = new Date().toLocaleString();
-   const result = await axios.get("https://webshop-sigma.vercel.app/api/product/terry-polo-shirt");
-   console.log(`  *** result:`, result.data.name, ", time: ", time);
-};
 module.exports = { wakeUp };
