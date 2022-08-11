@@ -23,7 +23,6 @@ app.get("/", async (req, res) => {
    res.send("sever is runing ");
 });
 
-wakeUp() 
 
 // console.log(`  *** editData()`, editData())
 
@@ -37,6 +36,7 @@ app.use((err, req, res, next) => {
 });
 
 connectToDb(process.env.MONGODB_URI);
+wakeUp()  
 
 app.listen(port, () => {
    console.log(`Sever is runing at port ${port}`);
