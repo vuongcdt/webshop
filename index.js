@@ -18,8 +18,8 @@ app.use(morgan("dev"));
 
 app.use("/api", router);
 
-app.get("/", async (req, res) => {
-   await wakeUp();
+app.get("/", (req, res) => {
+   wakeUp();
    res.send("sever is runing !");
 });
 
