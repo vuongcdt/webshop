@@ -5,13 +5,16 @@ const findOneProductBySlugDb = async (slug) => {
 };
 
 const findAllProductsByQueryDb = async ({ per_page, page, order, orderby, slug, pa_color, pa_brand, range_price, pa_discount, pa_rating, key }) => {
+   console.log(`  *** pa_rating`, pa_rating);
    const filter = {};
 
    if (slug) filter["categories.slug"] = { $in: slug.split(",") };
    if (pa_color) filter["color.slug"] = { $in: pa_color.split(",") };
    if (pa_brand) filter["brand.slug"] = { $in: pa_brand.split(",") };
    if (pa_discount) filter.discount = { $gte: +pa_discount };
-   if (pa_rating) filter.rating = { $gte: +pa_rating, $lt: +pa_rating + 1 };
+   // if (pa_rating) filter.rating = { $gte: +pa_rating, $lt: +pa_rating + 1 };
+   if (pa_rating) filter["$or"] = pa_rating.split(",").map((num) => ({ rating: { $gte: +num, $lt: +num + 1 } }));
+
    if (range_price) {
       const [min, max] = range_price.split(":");
       filter.price = { $gt: +min, $lt: +max };
@@ -126,7 +129,7 @@ const filterSidebar = async (filter) => {
    const filterDiscount = { ...filter };
    delete filterDiscount.discount;
    const filterRating = { ...filter };
-   delete filterRating.rating;
+   delete filterRating["$or"];
    const filterPrice = { ...filter };
    delete filterPrice.price;
 

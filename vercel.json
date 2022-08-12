@@ -1,6 +1,4 @@
 {
-   "version": 2,
-   "name": "webshop",
    "builds": [{ "src": "index.js", "use": "@vercel/node" }],
    "routes": [{ "src": "/(.*)", "dest": "/" }],
    "regions": ["sin1"]
