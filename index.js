@@ -1,4 +1,4 @@
-// require("dotenv").config();
+require("dotenv").config();
 // ?directConnection=true
 const express = require("express");
 const morgan = require("morgan");
@@ -21,7 +21,7 @@ app.use("/api", router);
 
 app.get("/", (req, res) => {
    wakeUp();
-   res.send("sever is runing !");
+   res.send("sever is runing !"+process.env.MONGODB_URI+process.env.SEVERNAME);
 });
 
 // console.log(`  *** editData()`, editData())
