@@ -7,10 +7,10 @@ const wakeUp = () => {
       fetchMyWeb();
    }, 5 * 60 * 1000);
 };
-const fetchMyWeb = async () => {
+const fetchMyWeb = async (severname) => {
    try {
       const time = new Date().toLocaleString();
-      const result = await axios.get("https://webshop-sigma.vercel.app/api/product/terry-polo-shirt");
+      const result = await axios.get(severname + "api/product/terry-polo-shirt");
       console.log(`  *** result:`, result.data.name, ", time: ", time);
    } catch (error) {
       console.log(`  *** error get/ `, error);

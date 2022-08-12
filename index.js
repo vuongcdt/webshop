@@ -19,7 +19,7 @@ app.use(morgan("dev"));
 app.use("/api", router);
 
 app.get("/", (req, res) => {
-   wakeUp();
+   wakeUp(process.env.SEVERNAME);
    res.send("sever is runing !");
 });
 
@@ -35,7 +35,7 @@ app.use((err, req, res, next) => {
 });
 
 connectToDb(process.env.MONGODB_URI);
-wakeUp();
+wakeUp(process.env.SEVERNAME);
 
 app.listen(port, () => {
    console.log(`Sever is runing at port ${port}`);
