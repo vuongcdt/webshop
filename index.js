@@ -21,7 +21,7 @@ app.use("/api", router);
 
 app.get("/", (req, res) => {
    wakeUp();
-   res.send("sever is runing !"+process.env.MONGODB_URI+process.env.SEVERNAME);
+   res.send("sever is runing !");
 });
 
 // console.log(`  *** editData()`, editData())
