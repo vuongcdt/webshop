@@ -1,4 +1,4 @@
-require("dotenv").config();
+// require("dotenv").config();
 // ?directConnection=true
 const express = require("express");
 const morgan = require("morgan");
