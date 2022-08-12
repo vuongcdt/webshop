@@ -11,11 +11,11 @@ const productsFilterCtrl = async (query) => {
       query.order = -1;
    } else query.order = 1;
 
+   if (query.orderby === "date" || !query.orderby) query.orderby = "date_created";
    if (!["date_created", "price", "name", "average_rating", "_id", "regular_price", ""].includes(query.orderby) && query.orderby) {
       throw new Error("Field not correct");
    }
 
-   if (query.orderby === "date" || !query.orderby) query.orderby = "date_created";
    if (query.per_page > 50) query.per_page = 50;
    if (!query.per_page) query.per_page = 20;
    if (!query.page) query.page = 1;
