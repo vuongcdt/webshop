@@ -1,4 +1,5 @@
 require("dotenv").config();
+// ?directConnection=true
 const express = require("express");
 const morgan = require("morgan");
 const cors = require("cors");
@@ -19,7 +20,7 @@ app.use(morgan("dev"));
 app.use("/api", router);
 
 app.get("/", (req, res) => {
-   wakeUp(process.env.SEVERNAME);
+   wakeUp();
    res.send("sever is runing !");
 });
 
@@ -35,7 +36,7 @@ app.use((err, req, res, next) => {
 });
 
 connectToDb(process.env.MONGODB_URI);
-wakeUp(process.env.SEVERNAME);
+wakeUp();
 
 app.listen(port, () => {
    console.log(`Sever is runing at port ${port}`);
