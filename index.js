@@ -13,19 +13,23 @@ const port = process.env.PORT || 5001;
 const app = express();
 
 app.use(express.json());
-app.use(cors());
+app.use(
+   cors({
+      origin: "*",
+      // origin:"http://mywebsite.vn"
+   })
+);
 app.use(morgan("dev"));
 
 app.use("/api", router);
 
 app.get("/", (req, res) => {
    wakeUp();
-   res.send("Sever is runing: "+ process.env.MONGODB_URI);
+   res.send("Sever is runing: " + process.env.MONGODB_URI);
 });
 
 // console.log(`  *** editData()`, editData())
 // ?directConnection=true
-
 
 app.use((err, req, res, next) => {
    if (err) {

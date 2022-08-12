@@ -5,6 +5,7 @@ const router = express.Router();
 router.get("/:slug", async(req, res) => {
    try {
       const { total_page, total_products, per_page, page, product } =await productCtrl(req.params.slug);
+
       res.set({ total_page, total_products, per_page, page });
       res.json(product);
    } catch (error) {
@@ -15,10 +16,10 @@ router.get("/:slug", async(req, res) => {
 
 router.get("/", async (req, res) => {
    try {
-      req.query.isCategory=true
       const { total_page, total_products, per_page, page, list_products, filterSidebar } = await productsFilterCtrl(req.query);
+
       res.set({ total_page, total_products, per_page, page });
-      // res.json({_total:total_products,list_products:list_products.map(({slug})=>slug)});
+      res.set('Access-Control-Expose-Headers', '*')
       res.json({_total:total_products,list_products,filterSidebar});
    } catch (error) {
       console.log(`  *** error get /product search ***`, error);
